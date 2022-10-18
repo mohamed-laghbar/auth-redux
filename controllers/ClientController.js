@@ -36,14 +36,27 @@ const registerClient =async (req, res , next)=>{
     throw new Error('Invalid user data')
   }
     
+}
 
+
+const loginClient = async (req, res) => {
+  const { email, password } = req.body
+
+  const user = await User.findOne({ email })
+
+  if (user && (await bcrypt.compare(password, user.password))) {
+    res.json({
+      _id: user.id,
+      name: user.name,
+      email: user.email,
+    })
+  } else {
+    res.status(400).json('invalid details')
+  }
 }
 
 
 
 
 
-
-
-
-module.exports = {registerClient}
+module.exports = {registerClient,loginClient}
