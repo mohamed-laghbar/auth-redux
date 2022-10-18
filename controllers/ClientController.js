@@ -1,6 +1,10 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
+const express = require('express');
+const app = express();
+const cookieParser = require('cookie-parser')
+app.use(cookieParser())
 
 
 const registerClient =async (req, res , next)=>{
@@ -48,22 +52,23 @@ const loginClient = async (req, res) => {
   const user = await User.findOne({ email })
 
   if (user && (await bcrypt.compare(password, user.password))) {
-    res.json({
-      _id: user.id,
-      name: user.name,
-      email: user.email,
-      token: generateToken(user._id),
+  const token = generateToken(user._id);
+  res.cookie('tok',token,{maxAge:900000,httpOnly:true}) 
+   res.json('you are logged in')
 
-    })
+    
   } else {
     res.status(400).json('invalid details')
   }
 }
 
+const dashboard = (req,res)=>{
+res.json('client dashboard')
+}
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {expiresIn: '30d', })
 }
 
 
-module.exports = {registerClient,loginClient}
+module.exports = {registerClient,loginClient,dashboard}

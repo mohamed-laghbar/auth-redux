@@ -1,10 +1,10 @@
 const router = require("express").Router();
-const { Router } = require("express");
-const {registerClient,loginClient}= require('../controllers/ClientController')
-
+const {registerClient,loginClient,dashboard}= require('../controllers/ClientController')
+const {protect} = require('../Middlewares/authMiddleware')
 
 router.post('/', registerClient)
 router.post('/login', loginClient)
+router.get('/dashboard',protect,dashboard)
 
 
 
