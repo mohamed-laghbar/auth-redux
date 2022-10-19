@@ -18,8 +18,8 @@ const registerClient =async (req, res , next)=>{
     const existUser = await User.findOne({email})
 
     if(existUser){
-        res.status(400)
-        throw new Error('User already exists')
+        res.status(403).json('User already exists')
+        
     } 
 
     const hachedPassword =await bcrypt.hash(password,10)
@@ -53,8 +53,8 @@ const loginClient = async (req, res) => {
 
   if (user && (await bcrypt.compare(password, user.password))) {
   const token = generateToken(user._id);
-  res.cookie('tok',token,{maxAge:900000,httpOnly:true}) 
-   res.json('you are logged in')
+  res.cookie('token', token, {secure: false, httpOnly: true,});
+  res.json(`Your logged in + your token is : ${req.cookies.token}`)
 
     
   } else {
