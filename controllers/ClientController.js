@@ -3,17 +3,22 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
 const express = require('express');
 const app = express();
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
 app.use(cookieParser())
-
+const inputValidation = require('../utils/inputValidation.js')
 
 const registerClient =async (req, res , next)=>{
 
     const {name,email,password}= req.body;
+    new inputValidation().FormValidation(
+      name,
+      email,
+      password
+    );
+
     if(!name || !email || !password){
         res.json({message: 'please fill all the feilds'})
     }
-
 
     const existUser = await User.findOne({email})
 
@@ -52,8 +57,8 @@ const loginClient = async (req, res) => {
   const user = await User.findOne({ email })
 
   if (user && (await bcrypt.compare(password, user.password))) {
-  const token = generateToken(user._id);
-  res.cookie('token', token, {secure: false, httpOnly: true,});
+  const token =  generateToken(user._id);
+ await res.cookie('token', token, {secure: false, httpOnly: true, maxAge : 10000000});
   res.json(`Your logged in + your token is : ${req.cookies.token}`)
 
     
