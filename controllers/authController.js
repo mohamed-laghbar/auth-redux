@@ -6,6 +6,7 @@ const app = express();
 const cookieParser = require('cookie-parser');
 app.use(cookieParser())
 const inputValidation = require('../utils/inputValidation.js')
+const generateToken = require('../utils/generateToken')
 
 const registerClient =async (req, res , next)=>{
 
@@ -71,9 +72,7 @@ const dashboard = (req,res)=>{
 res.json('client dashboard')
 }
 
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {expiresIn: '30d', })
-}
+
 
 
 module.exports = {registerClient,loginClient,dashboard}

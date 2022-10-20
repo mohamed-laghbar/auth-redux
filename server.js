@@ -8,9 +8,8 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/api/manager',require('./routes/ManagerRoute'));
-app.use('/api/client',require('./routes/ClientRoute'));
-app.use('/api/livreur',require('./routes/LivreurRoute'));
+app.use('/api/auth',require('./routes/authRoute'));
+
 
 
 
