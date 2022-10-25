@@ -8,11 +8,11 @@ const transport = nodemailer.createTransport({
   service: "Gmail",
   auth: {
     user: user,
-    pass: pass,
+    pass: pass
   },
 });
 
-module.exports.sendConfirmationEmail = (name, email,token) => {
+sendConfirmationEmail = (name, email,token) => {
     console.log("Check");
     transport.sendMail({
       from: user,
@@ -25,4 +25,21 @@ module.exports.sendConfirmationEmail = (name, email,token) => {
           </div>`,
     }).catch(err => console.log(err));
   };
+
+
+  async function sendResetPasswordEmail(name, email, token) {
+    const mailOptions = {
+      from: user,
+      to: email,
+      subject: "Reset Password",
+      html: `<h1>Hello ${name}</h1>
+      <p>Please click on the link below to reset your password</p>
+      <a href="http://localhost:1337/api/auth/resetpassword/${token}">Reset Password</a>`,
+    };
+  
+    await transporter.sendMail(mailOptions);
+    console.log("reset password email was sent");
+  }
+
+  module.exports = {sendResetPasswordEmail,sendConfirmationEmail}
 

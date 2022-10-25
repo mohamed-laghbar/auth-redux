@@ -50,7 +50,7 @@ const registerClient =async (req, res , next)=>{
     })
       .then((user) => {
         if (!user) {
-          return res.json('User not founs!')
+          return res.json('User not found!')
         }
   
         user.status = "Active";
@@ -74,7 +74,7 @@ const loginClient = async (req, res) => {
     
       if(user.status == "Active"){
       const token = await generateToken(user._id);
-      await res.cookie('token', token, {secure: false, httpOnly: true, maxAge : 10000000});
+      await res.cookie('token', token, {secure: false, httpOnly: true, maxAge : 100000});
        res.json(`Your logged in + your token is : ${token}`)
       }else  res.json('Please verify your account')
 
@@ -82,6 +82,24 @@ const loginClient = async (req, res) => {
     res.status(400).json('invalid details')
   }
 }
+
+const forgetPassword = async (req, res) => {
+const email = req.body.email;
+  if (!email) {
+    res.json("Email is required");
+  }
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    res.json("Invalid Email");
+  }
+
+  const reset_token = generateToken(user._id); // 
+  sendResetPasswordEmail(user.name, user.email, reset_token);
+
+  res.status(200).json('Ok' );
+};
+
 
 
 const dashboard = (req,res)=>{
@@ -91,4 +109,4 @@ res.json('client dashboard')
 
 
 
-module.exports = {registerClient,VerifyUser,loginClient,dashboard}
+module.exports = {registerClient,VerifyUser,loginClient,dashboard,forgetPassword}

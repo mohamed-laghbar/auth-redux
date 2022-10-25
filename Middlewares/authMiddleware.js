@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 
 const protect = async (req, res, next) => {
-  const token = req.cookies.token || '';
+  const token = req.cookies.token ;
   try {
     if (!token) {
       return res.status(401).json('You need to Login')
