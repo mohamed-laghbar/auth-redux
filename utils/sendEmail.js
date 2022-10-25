@@ -1,30 +1,28 @@
 const nodemailer = require("nodemailer");
 require('dotenv').config()
-const user = process.env.USER;
-const pass = process.env.PASS;
-const host = process.env.HOST;
+const user = process.env.EMAIL_ADDRESS;
+const pass = process.env.EMAIL_PASS;
 
-const transporter = nodemailer.createTransport({
-    service: "Gmail",
-    auth: {
-      user: user, 
-      pass: pass, 
-    },
+
+const transport = nodemailer.createTransport({
+  service: "Gmail",
+  auth: {
+    user: user,
+    pass: pass,
+  },
 });
 
-async function sendConfirmationEmail(name, email, token) {
-  const mailOptions = {
-    from: user,
-    to: email,
-    subject: "Email Confirmation",
-    html: `<h1>Hello ${name}</h1>
-    <p>Thank you for registering on our website</p>
-    <p>Please click on the link below to confirm your email</p>
-    <a href="${host}/api/auth/confirm/${token}">Confirm Email</a>`,
+module.exports.sendConfirmationEmail = (name, email,token) => {
+    console.log("Check");
+    transport.sendMail({
+      from: user,
+      to: email,
+      subject: "Please confirm your account",
+      html: `<h1>Email Confirmation</h1>
+          <h2>Hello ${name}</h2>
+          <p> Please confirm your email by clicking on the following link</p>
+          <a href='http://localhost:1337/api/auth/confirm/${token}'> Click here</a>
+          </div>`,
+    }).catch(err => console.log(err));
   };
 
-  await transporter.sendMail(mailOptions);
-  console.log("verifiction email was sent");
-}
-
-module.exports = sendConfirmationEmail

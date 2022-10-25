@@ -3,12 +3,12 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
 const crypto = require("crypto");
 const express = require('express');
+const nodemailer = require('../utils/sendEmail')
 const app = express();
 const cookieParser = require('cookie-parser');
 app.use(cookieParser())
 const inputValidation = require('../utils/inputValidation.js')
 const generateToken = require('../utils/generateToken')
-const sendConfirmationEmail = require('../utils/sendEmail')
 
 const registerClient =async (req, res , next)=>{
 
@@ -39,15 +39,30 @@ const registerClient =async (req, res , next)=>{
     password: hachedPassword,
     confirmationCode:verification_token
     })
-
-
-    sendConfirmationEmail(name, email, verification_token);
-    res.status(201).json(
-      'email was sent'
-    );
-  } 
+    nodemailer.sendConfirmationEmail(name,email,verification_token);
+    res.json('User Created  ')
     
-
+  } 
+  
+  const VerifyUser = (req, res, next) => {
+    User.findOne({
+      confirmationCode: req.params.confirmationCode,
+    })
+      .then((user) => {
+        if (!user) {
+          return res.json('User not founs!')
+        }
+  
+        user.status = "Active";
+        user.save((err) => {
+          if (err) {
+            return res.json(err)
+            
+          }
+        });
+      })
+      .catch((e) => console.log("error", e));
+  };
 
 
 const loginClient = async (req, res) => {
@@ -55,16 +70,19 @@ const loginClient = async (req, res) => {
 
   const user = await User.findOne({ email })
 
-  if (user && (await bcrypt.compare(password, user.password))) {
-  const token =  generateToken(user._id);
- await res.cookie('token', token, {secure: false, httpOnly: true, maxAge : 10000000});
-  res.json(`Your logged in + your token is : ${req.cookies.token}`)
-
+   if (user && (await bcrypt.compare(password, user.password))) {
     
+      if(user.status == "Active"){
+      const token = await generateToken(user._id);
+      await res.cookie('token', token, {secure: false, httpOnly: true, maxAge : 10000000});
+       res.json(`Your logged in + your token is : ${token}`)
+      }else  res.json('Please verify your account')
+
   } else {
     res.status(400).json('invalid details')
   }
 }
+
 
 const dashboard = (req,res)=>{
 res.json('client dashboard')
@@ -73,4 +91,4 @@ res.json('client dashboard')
 
 
 
-module.exports = {registerClient,loginClient,dashboard}
+module.exports = {registerClient,VerifyUser,loginClient,dashboard}
