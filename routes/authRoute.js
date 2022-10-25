@@ -17,6 +17,4 @@ router.post('/resetpassword/:token')
 
 
 
-
-
 module.exports = router

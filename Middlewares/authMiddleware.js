@@ -10,7 +10,6 @@ const protect = async (req, res, next) => {
     const decrypt = await jwt.verify(token, process.env.JWT_SECRET);
     req.user = {
       id: decrypt.id,
-      firstname: decrypt.firstname,
     };
     next();
   } catch (err) {

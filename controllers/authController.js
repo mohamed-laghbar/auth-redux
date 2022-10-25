@@ -1,12 +1,14 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
+const crypto = require("crypto");
 const express = require('express');
 const app = express();
 const cookieParser = require('cookie-parser');
 app.use(cookieParser())
 const inputValidation = require('../utils/inputValidation.js')
 const generateToken = require('../utils/generateToken')
+const sendConfirmationEmail = require('../utils/sendEmail')
 
 const registerClient =async (req, res , next)=>{
 
@@ -28,28 +30,24 @@ const registerClient =async (req, res , next)=>{
         
     } 
 
-    const hachedPassword =await bcrypt.hash(password,10)
+    const hachedPassword = await bcrypt.hash(password,10)
+    const verification_token = crypto.randomBytes(32).toString("hex");
 
      const user = await User.create({
     name,
     email,
     password: hachedPassword,
+    confirmationCode:verification_token
     })
 
-  if (user) {
-    res.status(201).json({
-      _id: user.id,
-      name: user.name,
-      email: user.email,
-      token: generateToken(user._id),
 
-    })
-  } else {
-    res.status(400)
-    throw new Error('Invalid user data')
-  }
+    sendConfirmationEmail(name, email, verification_token);
+    res.status(201).json(
+      'email was sent'
+    );
+  } 
     
-}
+
 
 
 const loginClient = async (req, res) => {

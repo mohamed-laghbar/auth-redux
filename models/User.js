@@ -15,12 +15,20 @@ const userSchema = mongoose.Schema(
             type: String,
             required: [true, 'Please add an password']
         },   
-        role: [
+        role: 
             {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: "Role",
+                type: String, 
+                enum: ['User', 'Admin', 'Livreur'],
+                default: 'User'
             },
-          ],
+        status: {
+                type: String, 
+                enum: ['Pending', 'Active'],
+                default: 'Pending'
+              },
+        confirmationCode: { 
+                type: String, 
+                unique: true },
     },
     {
         timestamps: true,
