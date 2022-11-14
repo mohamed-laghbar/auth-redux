@@ -14,10 +14,10 @@ function App() {
     <BrowserRouter>
            <Routes>
             <Route element={<PrivateRoutes />}>
-               <Route path="" element={<Login />} />
-               <Route path="home" element={<Home />} />
+               <Route path="/home" element={<Home />} exact/>
             </Route>
-            <Route element={<Login/>} path="/login"/>
+            <Route element={ <Login />} path="/login" exact/>
+            <Route element={<Register />} path="/register" exact/>
           </Routes>
     </BrowserRouter>
 

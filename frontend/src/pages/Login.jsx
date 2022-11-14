@@ -1,18 +1,16 @@
 import  { useState }from "react"
 import { useNavigate } from 'react-router';
 import toast, { Toaster } from 'react-hot-toast';
-import axios from '../api/axios';
-import cookie from 'js-cookie'
-
+import axios from '../api/axios'; 
 const { ValidateEmail  , validatePassword} = require('../utils/helpers')
 
 
 const Login = ()  => {
   let navigate = useNavigate();
-
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  
 
   const handleSubmit = async (event) => {
 
@@ -28,18 +26,19 @@ const Login = ()  => {
       toast.error('Password must be more then 6 caracteres')
     }
 
+  else {
+
     try {
-    const response =   await axios.post('http://localhost:3000/api/auth/login',
+           await axios.post('http://localhost:3000/api/auth/login',
           JSON.stringify({ email, password }),
           {
               headers: { 'Content-Type': 'application/json' },
               withCredentials: true
           }
       );
-          console.log(response)
           navigate("/home")
-          const h = cookie.get('token')
-          console.log(h)
+          
+         
 
 
   } catch (err) {
@@ -52,10 +51,9 @@ const Login = ()  => {
       toast.error('Login Failed')
 
   }     
-  
-  
-    
+   
   }
+}
   };
 
 
