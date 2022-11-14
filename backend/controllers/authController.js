@@ -76,7 +76,7 @@ const loginClient = async (req, res) => {
 
     if (user.status == "Active") {
       const token = await generateToken(user._id);
-      await res.cookie('token', token, { secure: false, httpOnly: true, maxAge: 100000 });
+      await res.cookie('token', token, { secure: false, maxAge: 100000 });
       res.json('you are logged in')
     } else res.json('Please verify your account')
 

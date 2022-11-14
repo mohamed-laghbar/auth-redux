@@ -2,7 +2,7 @@ import  { useState }from "react"
 import { useNavigate } from 'react-router';
 import toast, { Toaster } from 'react-hot-toast';
 import axios from '../api/axios';
-
+import cookie from 'js-cookie'
 
 const { ValidateEmail  , validatePassword} = require('../utils/helpers')
 
@@ -38,7 +38,9 @@ const Login = ()  => {
       );
           console.log(response)
           navigate("/home")
-      
+          const h = cookie.get('token')
+          console.log(h)
+
 
   } catch (err) {
     if (!err?.response) {
