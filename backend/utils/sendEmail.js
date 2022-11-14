@@ -21,7 +21,7 @@ sendConfirmationEmail = (name, email,token) => {
       html: `<h1>Email Confirmation</h1>
           <h2>Hello ${name}</h2>
           <p> Please confirm your email by clicking on the following link</p>
-          <a href='http://localhost:1337/api/auth/confirm/${token}'> Click here</a>
+          <a href='http://localhost:3000/api/auth/confirm/${token}'> Click here</a>
           </div>`,
     }).catch(err => console.log(err));
   };

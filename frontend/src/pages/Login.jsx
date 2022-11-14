@@ -1,21 +1,26 @@
 import  { useState }from "react"
+import { useNavigate } from 'react-router';
 import toast, { Toaster } from 'react-hot-toast';
+import axios from '../api/axios';
+
+
 const { ValidateEmail  , validatePassword} = require('../utils/helpers')
 
 
-function Login() {
+const Login = ()  => {
+  let navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = event => {
-    event.preventDefault();
-    // validate the email
-    if(email === ''){
-      toast.error('email feild is empty!')
 
-    }else if(! ValidateEmail(email)){
-        toast.error('email format is invalid!')
+  const handleSubmit = async (event) => {
+
+    event.preventDefault();
+
+    // validate the email
+     if(! ValidateEmail(email)){
+        toast.error('Invalid email format!')
 
     }
     // validate the password
@@ -23,8 +28,32 @@ function Login() {
       toast.error('Password must be more then 6 caracteres')
     }
 
-    setEmail('');
-    setPassword('');
+    try {
+    const response =   await axios.post('http://localhost:3000/api/auth/login',
+          JSON.stringify({ email, password }),
+          {
+              headers: { 'Content-Type': 'application/json' },
+              withCredentials: true
+          }
+      );
+          console.log(response)
+          navigate("/home")
+      
+
+  } catch (err) {
+    if (!err?.response) {
+      toast.error('No Server Response')
+  } else if (err.response?.status === 400) {
+    toast.error(err.response?.data)
+
+  }  else {
+      toast.error('Login Failed')
+
+  }     
+  
+  
+    
+  }
   };
 
 
@@ -35,7 +64,6 @@ function Login() {
         <div className="container max-w-sm 	 mx-auto flex-1 flex flex-col items-center justify-center px-2">
           <div className="bg-white px-6 py-8 bg-amber-100	 rounded shadow-md text-black w-full">
             <h1 className="mb-8 text-4xl font-bold	 text-center">Login</h1>
-
             <form onSubmit={handleSubmit}>
             <input onChange={event => setEmail(event.target.value)}  value={email} type="text" className="block border border-grey-light w-full p-3 rounded mb-4" name="email" placeholder="Email" />
             <input onChange={event => setPassword(event.target.value)}  value={password} type="password" className="block border border-grey-light w-full p-3 rounded mb-4" name="password" placeholder="Password" />
@@ -49,6 +77,6 @@ function Login() {
     <Toaster />
     </div>
   )
+  
 }
-
 export default Login

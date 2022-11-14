@@ -1,7 +1,7 @@
 import React,{} from 'react'
 
 
-function Register() {
+const  Register = () => {
   
   
   return (
@@ -30,7 +30,7 @@ function Register() {
           </div>
           <div className="text-grey-dark mt-6">
             Already have an account ? 
-            <a className="no-underline border-b border-blue text-red-900" href="/login">
+            <a className="no-underline border-b border-blue text-red-900" href="/">
               <span> </span>Log in
             </a>.
           </div>

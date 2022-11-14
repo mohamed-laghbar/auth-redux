@@ -55,11 +55,12 @@ const VerifyUser = (req, res, next) => {
       }
 
       user.status = "Active";
+      
       user.save((err) => {
         if (err) {
           return res.json(err)
 
-        }
+        }else console.log(`this email ${user.email} is Acitve Now`)
       });
     })
     .catch((e) => console.log("error", e));
@@ -76,7 +77,7 @@ const loginClient = async (req, res) => {
     if (user.status == "Active") {
       const token = await generateToken(user._id);
       await res.cookie('token', token, { secure: false, httpOnly: true, maxAge: 100000 });
-      res.json(`Your logged in + your token is : ${token}`)
+      res.json('you are logged in')
     } else res.json('Please verify your account')
 
   } else {

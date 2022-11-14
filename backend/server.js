@@ -1,19 +1,18 @@
 const express = require('express');
+var cookieParser = require('cookie-parser');
+
 const app = express();
 require('dotenv').config();
 require('./config/db');
-var cookieParser = require('cookie-parser');
+var cors = require('cors')
 app.use(cookieParser());
+
+app.use(cors({ origin:true, credentials:true }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth',require('./routes/authRoute'));
-
-
-
-
-
 
 
 
