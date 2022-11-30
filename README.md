@@ -1,6 +1,6 @@
 ------ Docker backend commande ligne ------
 
-1 Crée "Dockerfile" de partie frontend :
+1 Crée "Dockerfile" de partie backend :
 
         FROM node:16-alpine
 
