@@ -1,62 +1,63 @@
-import  { useState }from "react"
-import { useNavigate } from 'react-router';
-import toast, { Toaster } from 'react-hot-toast';
-import axios from '../api/axios'; 
-const { ValidateEmail  , validatePassword} = require('../utils/helpers')
+import { useState } from "react";
+import { useNavigate} from 'react-router-dom';
+import toast, { Toaster } from "react-hot-toast";
+import axios from "../api/axios";
+const { ValidateEmail, validatePassword } = require("../utils/helpers");
 
-
-const Login = ()  => {
+const Login = () => {
   let navigate = useNavigate();
-  
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errEmail, setEmailErr] = useState("");
+  const [errPassword, setPasswordErr] = useState("");
 
   const handleSubmit = async (event) => {
-
     event.preventDefault();
 
     // validate the email
-     if(! ValidateEmail(email)){
-        toast.error('Invalid email format!')
-
-    }
+    if (!ValidateEmail(email)) {
+      setEmailErr("Invalid email format!");
+    } else setEmailErr("");
     // validate the password
-    if(! validatePassword(password)){
-      toast.error('Password must be more then 6 caracteres')
-    }
+    if (!validatePassword(password)) {
+      setPasswordErr("Password must be more then 6 caracteres");
+    } else setPasswordErr("");
 
-  else {
-
-    try {
-           await axios.post('http://localhost:3000/api/auth/login',
+    if (ValidateEmail(email) && validatePassword(password)) {
+      try {
+        const data =  await axios.post(
+          "http://localhost:4000/api/auth/login",
           JSON.stringify({ email, password }),
           {
-              headers: { 'Content-Type': 'application/json' },
-              withCredentials: true
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
           }
-      );
-          navigate("/home")
+        );
+        if (data.status=='200') {
+          toast.success(data.data);
+          navigate('/home')
+        }
+        
+      } catch (error) {
+        console.log(error.response.data)
+        
+          if (error.response.status=='401') {
+          toast.success(error.response.data);
+          console.log(error.response.data);
+  
+        } else  if (error.response.status=='403') {
+          toast.error(error.response.data);
           
-         
+          
+        } 
+      }
 
 
-  } catch (err) {
-    if (!err?.response) {
-      toast.error('No Server Response')
-  } else if (err.response?.status === 400) {
-    toast.error(err.response?.data)
-
-  }  else {
-      toast.error('Login Failed')
-
-  }     
-   
-  }
-}
+     
+     
+    }    
   };
-
-
 
   return (
     <div className="flex min-h-full items-center justify-center py-12 m:px-6 lg:px-8">
@@ -65,18 +66,85 @@ const Login = ()  => {
           <div className="bg-white px-6 py-8 bg-amber-100	 rounded shadow-md text-black w-full">
             <h1 className="mb-8 text-4xl font-bold	 text-center">Login</h1>
             <form onSubmit={handleSubmit}>
-            <input onChange={event => setEmail(event.target.value)}  value={email} type="text" className="block border border-grey-light w-full p-3 rounded mb-4" name="email" placeholder="Email" />
-            <input onChange={event => setPassword(event.target.value)}  value={password} type="password" className="block border border-grey-light w-full p-3 rounded mb-4" name="password" placeholder="Password" />
-            <button type="submit" className="w-full text-center py-3 rounded bg-blue-900 text-white hover:bg-green-dark focus:outline-none my-1">Login</button>
+              <input
+                onChange={(event) => setEmail(event.target.value)}
+                value={email}
+                type="text"
+                className="block border border-grey-light w-full p-3 rounded mb-4"
+                name="email"
+                placeholder="Email"
+              />
+              {errEmail ? (
+                <div
+                  className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
+                  role="alert"
+                >
+                  {" "}
+                  {errEmail}
+                </div>
+              ) : (
+                ""
+              )}
+              <input
+                onChange={(event) => setPassword(event.target.value)}
+                value={password}
+                type="password"
+                className="block border border-grey-light w-full p-3 rounded mb-4"
+                name="password"
+                placeholder="Password"
+              />
+              {errPassword ? (
+                <div
+                  className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
+                  role="alert"
+                >
+                  {" "}
+                  {errPassword}
+                </div>
+              ) : (
+                ""
+              )}
+
+              <button
+                type="submit"
+                className="w-full text-center py-3 rounded bg-blue-900 text-white hover:bg-green-dark focus:outline-none my-1"
+              >
+                Login
+              </button>
             </form>
 
-            <div className="text-center text-sm text-grey-dark mt-4"> By signing in, you agree to the <a className="no-underline border-b border-grey-dark text-blue-900" href="/"> <span> </span>  Terms of Service  </a>   <span> and </span> <a className="no-underline border-b border-grey-dark text-blue-900	" href="/">  Privacy Policy </a> </div>
+            <div className="text-center text-sm text-grey-dark mt-4">
+              {" "}
+              Did you forget your password, Don't worry{" "}
+              <a
+                className="no-underline border-b border-grey-dark text-blue-900"
+                href="/resetpassword"
+              >
+                {" "}
+                <span> </span> Reset from here{" "}
+              </a>{" "}
+             
+              
+            </div>
+            <div className="text-center text-sm text-grey-dark mt-4">
+              {" "}
+              You don't have account ?{" "}
+              <a
+                className="no-underline border-b border-grey-dark text-blue-900"
+                href="/register"
+              >
+                {" "}
+                <span> </span> Register Now!{" "}
+              </a>{" "}
+             
+              
+            </div>
+            
           </div>
         </div>
       </div>
-    <Toaster />
+      <Toaster />
     </div>
-  )
-  
-}
-export default Login
+  );
+};
+export default Login;

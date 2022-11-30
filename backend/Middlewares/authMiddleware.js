@@ -1,11 +1,11 @@
-const jwt = require('jsonwebtoken')
-const User = require('../models/User')
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 
 const protect = async (req, res, next) => {
   const token = req.cookies.token;
   try {
     if (!token) {
-      return res.status(401).json('You need to Login')
+      return res.status(401).json("You need to Login");
     }
     const decrypt = await jwt.verify(token, process.env.JWT_SECRET);
     req.user = {
@@ -15,8 +15,6 @@ const protect = async (req, res, next) => {
   } catch (err) {
     return res.status(500).json(err.toString());
   }
-}
+};
 
-
-
-module.exports = { protect, }
+module.exports = { protect };
