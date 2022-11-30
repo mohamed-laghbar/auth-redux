@@ -31,3 +31,16 @@
 5_ Exécutez un container basé sur cette image que vous venez de créer :
 
         docker container run -d --name api -v ${pwd}:/app -v /app/node_modules --network liv-app -p 4000:4000 api
+        
+        
+        
+        ------ Docker frontend commande ligne ------
+        
+  1- i build image using the following command:
+  
+        docker build -t client .
+        
+  2- i run a container who is base don the image client that we just create:
+        
+        docker run -p 3000:3000 -d client
+
