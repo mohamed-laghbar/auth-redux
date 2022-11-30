@@ -34,7 +34,9 @@
         
         
         
-        ------ Docker frontend commande ligne ------
+        
+   ------ Docker frontend commande ligne ------
+        
         
   1- i build image using the following command:
   
