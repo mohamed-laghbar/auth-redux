@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "../api/axios";
 import toast, { Toaster } from "react-hot-toast";
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const {
   ValidateEmail,
@@ -10,8 +10,7 @@ const {
 } = require("../utils/helpers");
 
 const Register = () => {
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [errName, setErrName] = useState("");
   const [errEmail, setErrEmail] = useState("");
   const [errPassword, setErrPassword] = useState("");
@@ -56,18 +55,13 @@ const Register = () => {
           withCredentials: true,
         }
       );
-      
-      if (data.status=='201') {
+
+      if (data.status == "201") {
         toast.success(data.data);
         setTimeout(() => {
-          navigate('/login')
-          
+          navigate("/login");
         }, 3000);
-        
-      } 
-      
-      else toast.success(data.data);
-
+      } else toast.success(data.data);
     }
   };
   return (

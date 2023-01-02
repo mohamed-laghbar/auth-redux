@@ -28,7 +28,7 @@ const registerClient = async (req, res, next) => {
         password: hachedPassword,
         confirmationCode: verification_token,
       });
-      nodemailer.sendConfirmationEmail(name, email, verification_token);
+      // nodemailer.sendConfirmationEmail(name, email, verification_token);
       res
         .status(201)
         .json("User Created seccusfully, Please verify your email ");
@@ -56,7 +56,7 @@ const loginClient = async (req, res) => {
     if (user.status == "Active") {
       const token = await generateToken(user._id);
       await res.cookie("token", token, { secure: false, maxAge: 100000 });
-      res.status(200).json("you are logged in");
+      res.status(200).json(token);
     } else res.status(401).json("Please verify your account");
   } else {
     res.status(403).json("Wrong Email or Password");
@@ -81,7 +81,7 @@ const VerifyUser = async (req, res, next) => {
       user.save((err) => {
         if (err) {
           return res.json(err);
-        } else res.redirect("http://localhost:3001/login");
+        } else res.redirect("http://localhost:3000/login");
       });
     })
     .catch((e) => console.log("error", e));
@@ -111,7 +111,6 @@ const ResetPassword = async (req, res, next) => {
     await User.findByIdAndUpdate(_id, {
       password,
     });
-    /*  */
 
     return res.status(200).send("password changed");
   } catch (error) {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "../api/axios";
 const { ValidateEmail, validatePassword } = require("../utils/helpers");
@@ -26,7 +26,7 @@ const Login = () => {
 
     if (ValidateEmail(email) && validatePassword(password)) {
       try {
-        const data =  await axios.post(
+        const data = await axios.post(
           "http://localhost:4000/api/auth/login",
           JSON.stringify({ email, password }),
           {
@@ -34,29 +34,22 @@ const Login = () => {
             withCredentials: true,
           }
         );
-        if (data.status=='200') {
-          toast.success(data.data);
-          navigate('/home')
+        if (data.status == "200") {
+          toast.success('You are logged in ');
+          console.log(data);
+          navigate("/home");
         }
-        
       } catch (error) {
-        console.log(error.response.data)
-        
-          if (error.response.status=='401') {
+        console.log(error.response.data);
+
+        if (error.response.status == "401") {
           toast.success(error.response.data);
           console.log(error.response.data);
-  
-        } else  if (error.response.status=='403') {
+        } else if (error.response.status == "403") {
           toast.error(error.response.data);
-          
-          
-        } 
+        }
       }
-
-
-     
-     
-    }    
+    }
   };
 
   return (
@@ -123,8 +116,6 @@ const Login = () => {
                 {" "}
                 <span> </span> Reset from here{" "}
               </a>{" "}
-             
-              
             </div>
             <div className="text-center text-sm text-grey-dark mt-4">
               {" "}
@@ -136,10 +127,7 @@ const Login = () => {
                 {" "}
                 <span> </span> Register Now!{" "}
               </a>{" "}
-             
-              
             </div>
-            
           </div>
         </div>
       </div>

@@ -8,21 +8,22 @@ import ResetPassword from "./pages/ResetPassword";
 import SetNewPassword from "./pages/SetNewPassword";
 
 
-
 function App() {
   return (
 
 
     <BrowserRouter>
            <Routes>
+           {/* Private routes */}
             <Route element={<PrivateRoutes />}>
                <Route path="/home" element={<Home />} exact/>
-            <Route element={<SetNewPassword />} path="/setnewpassword/:token" exact/>
-            <Route element={<ResetPassword />} path="/resetpassword" exact/>
-
             </Route>
+
+            {/* Public routes */}
             <Route element={ <Login />} path="/login" exact/>
             <Route element={<Register />} path="/register" exact/>
+            <Route element={<SetNewPassword />} path="/setnewpassword/:token" exact/>
+            <Route element={<ResetPassword />} path="/resetpassword" exact/>
           </Routes>
     </BrowserRouter>
 

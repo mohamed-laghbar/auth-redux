@@ -6,7 +6,7 @@ function ValidateEmail(mail) {
 }
 
 function validatePassword(p) {
-  if (p.trim().length < 6) {
+  if (p.trim().length < 4) {
     return false;
   }
 

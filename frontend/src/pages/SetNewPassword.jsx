@@ -2,37 +2,34 @@ import { useState } from "react";
 import axios from "../api/axios";
 import { useParams } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 function SetNewPassword() {
-    const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { token } = useParams();
 
-    const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-   
-      try {
-        const data = await axios.post(
-         `http://localhost:4000/api/auth/resetpassword/${token}`,
-          JSON.stringify({ password }),
-          {
-            headers: { "Content-Type": "application/json" },
-            withCredentials: true,
-          }
-        );
-        toast.success(data.data)
-        setTimeout(() => {
-            navigate('/login')
-            
-          }, 3000);
-      } catch (error) {
-        console.log(error)
-      }
-
+    try {
+      const data = await axios.post(
+        `http://localhost:4000/api/auth/resetpassword/${token}`,
+        JSON.stringify({ password }),
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+      toast.success(data.data);
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+    } catch (error) {
+      console.log(error);
+    }
   };
-  let {token} = useParams()
 
   return (
     <div className="flex min-h-full items-center justify-center py-12 m:px-6 lg:px-8">
@@ -51,7 +48,7 @@ function SetNewPassword() {
                 name="password"
                 placeholder="set New Password"
               />
-            
+
               <button
                 type="submit"
                 className="w-full text-center py-3 rounded bg-blue-900 text-white hover:bg-green-dark focus:outline-none my-1"
@@ -63,7 +60,8 @@ function SetNewPassword() {
         </div>
       </div>
       <Toaster />
-    </div>  )
+    </div>
+  );
 }
 
-export default SetNewPassword
+export default SetNewPassword;
